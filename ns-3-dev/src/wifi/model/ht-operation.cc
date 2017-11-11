@@ -182,7 +182,7 @@ HtOperation::SetTxRxMcsSetUnequal (uint8_t txrxmcssetunequal)
 void
 HtOperation::SetTxMaxNSpatialStreams (uint8_t maxtxspatialstreams)
 {
-  m_txMaxNSpatialStreams = maxtxspatialstreams;
+  m_txMaxNSpatialStreams = maxtxspatialstreams - 1; //0 for 1 SS, 1 for 2 SSs, etc
 }
 
 void
@@ -489,6 +489,7 @@ HtOperation::DeserializeInformationField (Buffer::Iterator start,
   return length;
 }
 
+/// HtOperation
 ATTRIBUTE_HELPER_CPP (HtOperation);
 
 /**

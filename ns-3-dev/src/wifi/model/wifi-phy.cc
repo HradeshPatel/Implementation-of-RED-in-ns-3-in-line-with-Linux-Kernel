@@ -320,7 +320,7 @@ WifiPhy::GetTypeId (void)
                    PointerValue (0), //StringValue ("ns3::SimpleFrameCaptureModel"),
                    MakePointerAccessor (&WifiPhy::GetFrameCaptureModel,
                                         &WifiPhy::SetFrameCaptureModel),
-                   MakePointerChecker <FrameCaptureModel>())
+                   MakePointerChecker <FrameCaptureModel> ())
     .AddTraceSource ("PhyTxBegin",
                      "Trace source indicating a packet "
                      "has begun transmitting over the channel medium",
@@ -2394,16 +2394,25 @@ WifiPhy::StartReceivePreambleAndHeader (Ptr<Packet> packet, double rxPowerW, Tim
       NS_FATAL_ERROR ("MCS value does not match NSS value: MCS = " << (uint16_t)txVector.GetMode ().GetMcsValue () << ", NSS = " << (uint16_t)txVector.GetNss ());
     }
 
-  if (txVector.GetNss () > GetMaxSupportedRxSpatialStreams ())
-    {
-      NS_FATAL_ERROR ("Reception ends in failure because of an unsupported number of spatial streams");
-    }
-
   Ptr<InterferenceHelper::Event> event;
   event = m_interference.Add (packet,
                               txVector,
                               rxDuration,
                               rxPowerW);
+
+  if (txVector.GetNss () > GetMaxSupportedRxSpatialStreams ())
+    {
+      NS_LOG_DEBUG ("drop packet because not enough RX antennas");
+      NotifyRxDrop (packet);
+      m_plcpSuccess = false;
+      if (endRx > Simulator::Now () + m_state->GetDelayUntilIdle ())
+        {
+          //that packet will be noise _after_ the transmission of the
+          //currently-transmitted packet.
+          MaybeCcaBusyDuration ();
+          return;
+        }
+    }
 
   MpduType mpdutype = tag.GetMpduType ();
   switch (m_state->GetState ())
@@ -2430,8 +2439,8 @@ WifiPhy::StartReceivePreambleAndHeader (Ptr<Packet> packet, double rxPowerW, Tim
       break;
     case WifiPhy::RX:
       NS_ASSERT (m_currentEvent != 0);
-      if (m_frameCaptureModel != 0 &&
-          m_frameCaptureModel->CaptureNewFrame(m_currentEvent, event))
+      if (m_frameCaptureModel != 0
+          && m_frameCaptureModel->CaptureNewFrame (m_currentEvent, event))
         {
           AbortCurrentReception ();
           NS_LOG_DEBUG ("Switch to new packet");
@@ -2550,7 +2559,7 @@ WifiPhy::EndReceive (Ptr<Packet> packet, WifiPreamble preamble, MpduType mpdutyp
           NotifyRxEnd (packet);
           SignalNoiseDbm signalNoise;
           signalNoise.signal = RatioToDb (event->GetRxPowerW ()) + 30;
-          signalNoise.noise = RatioToDb (event->GetRxPowerW () / snrPer.snr) - GetRxNoiseFigure () + 30;
+          signalNoise.noise = RatioToDb (event->GetRxPowerW () / snrPer.snr) + 30;
           MpduInfo aMpdu;
           aMpdu.type = mpdutype;
           aMpdu.mpduRefNumber = m_rxMpduReferenceNumber;
@@ -3505,7 +3514,7 @@ WifiPhy::IsValidTxVector (WifiTxVector txVector)
 bool
 WifiPhy::IsModeSupported (WifiMode mode) const
 {
-  for (uint32_t i = 0; i < GetNModes (); i++)
+  for (uint8_t i = 0; i < GetNModes (); i++)
     {
       if (mode == GetMode (i))
         {
@@ -3518,7 +3527,7 @@ WifiPhy::IsModeSupported (WifiMode mode) const
 bool
 WifiPhy::IsMcsSupported (WifiMode mcs) const
 {
-  for (uint32_t i = 0; i < GetNMcs (); i++)
+  for (uint8_t i = 0; i < GetNMcs (); i++)
     {
       if (mcs == GetMcs (i))
         {
@@ -3700,7 +3709,7 @@ WifiPhy::StartRx (Ptr<Packet> packet, WifiTxVector txVector, MpduType mpdutype, 
       NS_ASSERT (m_endPlcpRxEvent.IsExpired ());
       NotifyRxBegin (packet);
       m_interference.NotifyRxStart ();
-    
+
       if (preamble != WIFI_PREAMBLE_NONE)
         {
           NS_ASSERT (m_endPlcpRxEvent.IsExpired ());
