@@ -418,6 +418,7 @@ RedQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
         {
           NS_LOG_DEBUG ("adding DROP FORCED MARK");
           dropType = DTYPE_FORCED;
+          m_count = -1; //changed according to Linux implementation
         }
       else if (m_old == 0)
         {
@@ -427,7 +428,7 @@ RedQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
            * from above m_minTh with an empty queue to
            * above m_minTh with a nonempty queue.
            */
-          m_count = 1;
+         // m_count = 1;
           m_countBytes = item->GetSize ();
           m_old = 1;
         }
@@ -442,6 +443,7 @@ RedQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
       // No packets are being dropped
       m_vProb = 0.0;
       m_old = 0;
+      m_count = -1;//changed according to linux implementation
     }
 
   if (dropType == DTYPE_UNFORCED)
@@ -536,7 +538,7 @@ RedQueueDisc::InitializeParams (void)
   NS_ASSERT (m_minTh <= m_maxTh);
 
   m_qAvg = 0.0;
-  m_count = 0;
+  m_count = -1; //changed according to linux implementation initialization
   m_countBytes = 0;
   m_old = 0;
   m_idle = 1;
