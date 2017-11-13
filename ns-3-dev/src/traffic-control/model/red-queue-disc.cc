@@ -507,6 +507,9 @@ RedQueueDisc::InitializeParams (void)
 
       // Turn on m_isAdaptMaxP to adapt m_curMaxP
       m_isAdaptMaxP = true;
+      // schedule UpdateMaxP to run after m_interval 
+      Simulator::Schedule(m_interval, &RedQueueDisc::UpdateMaxP, this);
+
     }
 
   if (m_isFengAdaptive)
