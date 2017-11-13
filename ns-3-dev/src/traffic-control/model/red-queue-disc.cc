@@ -666,6 +666,8 @@ RedQueueDisc::UpdateMaxP (double newAve)
       m_curMaxP = m_curMaxP + alpha;
       m_lastSet = now;
     }
+       // modified UpdateMaxP to run after m_interval
+        Simulator::Schedule(m_interval, &RedQueueDisc::UpdateMaxP, this);
 }
 
 // Compute the average queue size
