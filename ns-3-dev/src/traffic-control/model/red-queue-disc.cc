@@ -73,7 +73,7 @@ NS_LOG_COMPONENT_DEFINE ("RedQueueDisc");
 NS_OBJECT_ENSURE_REGISTERED (RedQueueDisc);
 
 TypeId RedQueueDisc::GetTypeId (void)
-{
+{m
   static TypeId tid = TypeId ("ns3::RedQueueDisc")
     .SetParent<QueueDisc> ()
     .SetGroupName("TrafficControl")
@@ -642,20 +642,20 @@ RedQueueDisc::UpdateMaxPFeng (double newAve)
 
 // Update m_curMaxP to keep the average queue length within the target range.
 void
-RedQueueDisc::UpdateMaxP (double newAve)
+RedQueueDisc::UpdateMaxP (double m_qAvg)
 {
-  NS_LOG_FUNCTION (this << newAve);
+  NS_LOG_FUNCTION (this << m_qAvg);
 
   Time now = Simulator::Now ();
   double m_part = 0.4 * (m_maxTh - m_minTh);
   // AIMD rule to keep target Q~1/2(m_minTh + m_maxTh)
-  if (newAve < m_minTh + m_part && m_curMaxP > m_bottom)
+  if (m_qAvg < m_minTh + m_part && m_curMaxP > m_bottom)
     {
       // we should increase the average queue size, so decrease m_curMaxP
       m_curMaxP = m_curMaxP * m_beta;
       m_lastSet = now;
     }
-  else if (newAve > m_maxTh - m_part && m_top > m_curMaxP)
+  else if (m_qAvg > m_maxTh - m_part && m_top > m_curMaxP)
     {
       // we should decrease the average queue size, so increase m_curMaxP
       double alpha = m_alpha;
