@@ -271,7 +271,7 @@ private:
     * \brief Update m_curMaxP
     * \param newAve new average queue length
     */
-  void UpdateMaxP (double newAve);
+  void UpdateMaxP ();
    /**
     * \brief Update m_curMaxP based on Feng's Adaptive RED
     * \param newAve new average queue length

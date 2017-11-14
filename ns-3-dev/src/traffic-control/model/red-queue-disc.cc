@@ -642,7 +642,7 @@ RedQueueDisc::UpdateMaxPFeng (double newAve)
 
 // Update m_curMaxP to keep the average queue length within the target range.
 void
-RedQueueDisc::UpdateMaxP (double m_qAvg)
+RedQueueDisc::UpdateMaxP ()
 {
   NS_LOG_FUNCTION (this << m_qAvg);
 
