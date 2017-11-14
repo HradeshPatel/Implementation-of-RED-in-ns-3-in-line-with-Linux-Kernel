@@ -680,11 +680,7 @@ RedQueueDisc::Estimator (uint32_t nQueued, uint32_t m, double qAvg, double qW)
   newAve += qW * nQueued;
 
   Time now = Simulator::Now ();
-  if (m_isAdaptMaxP && now > m_lastSet + m_interval)
-    {
-      UpdateMaxP (newAve);
-    }
-  else if (m_isFengAdaptive)
+  if (m_isFengAdaptive)
     {
       UpdateMaxPFeng (newAve);  // Update m_curMaxP in MIMD fashion.
     }
