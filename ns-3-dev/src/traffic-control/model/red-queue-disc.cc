@@ -73,7 +73,7 @@ NS_LOG_COMPONENT_DEFINE ("RedQueueDisc");
 NS_OBJECT_ENSURE_REGISTERED (RedQueueDisc);
 
 TypeId RedQueueDisc::GetTypeId (void)
-{m
+{
   static TypeId tid = TypeId ("ns3::RedQueueDisc")
     .SetParent<QueueDisc> ()
     .SetGroupName("TrafficControl")
@@ -223,8 +223,7 @@ TypeId RedQueueDisc::GetTypeId (void)
                    "True to always drop packets above max threshold",
                    BooleanValue (true),
                    MakeBooleanAccessor (&RedQueueDisc::m_useHardDrop),
-                   MakeBooleanChecker ())
-  ;
+                   MakeBooleanChecker ());
 
   return tid;
 }
