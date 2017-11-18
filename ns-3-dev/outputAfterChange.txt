@@ -1,0 +1,4 @@
+Waf: Entering directory `/home/debojyoti/Desktop/Implementation-of-RED-in-ns-3-in-line-with-Linux-Kernel/ns-3-dev/build'
+[ 982/2565] Compiling scratch/adaptive.cc
+Waf: Leaving directory `/home/debojyoti/Desktop/Implementation-of-RED-in-ns-3-in-line-with-Linux-Kernel/ns-3-dev/build'
+Interrupted 

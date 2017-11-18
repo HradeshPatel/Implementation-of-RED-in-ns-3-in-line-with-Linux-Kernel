@@ -417,7 +417,6 @@ RedQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
         {
           NS_LOG_DEBUG ("adding DROP FORCED MARK");
           dropType = DTYPE_FORCED;
-          m_count = -1; //changed according to Linux implementation
         }
       else if (m_old == 0)
         {
@@ -427,7 +426,7 @@ RedQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
            * from above m_minTh with an empty queue to
            * above m_minTh with a nonempty queue.
            */
-         // m_count = 1;
+          m_count = 1;
           m_countBytes = item->GetSize ();
           m_old = 1;
         }
@@ -442,7 +441,6 @@ RedQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
       // No packets are being dropped
       m_vProb = 0.0;
       m_old = 0;
-      m_count = -1;//changed according to linux implementation
     }
 
   if (dropType == DTYPE_UNFORCED)
@@ -506,10 +504,14 @@ RedQueueDisc::InitializeParams (void)
 
       // Turn on m_isAdaptMaxP to adapt m_curMaxP
       m_isAdaptMaxP = true;
-      // schedule UpdateMaxP to run after m_interval 
-      Simulator::Schedule(m_interval, &RedQueueDisc::UpdateMaxP, this);
-
+      
     }
+
+  if(m_isAdaptMaxP)
+    {
+      // Schedule UpdateMaxP to run after m_interval 
+      Simulator::Schedule(m_interval, &RedQueueDisc::UpdateMaxP, this);
+    }  
 
   if (m_isFengAdaptive)
     {
@@ -540,7 +542,7 @@ RedQueueDisc::InitializeParams (void)
   NS_ASSERT (m_minTh <= m_maxTh);
 
   m_qAvg = 0.0;
-  m_count = -1; //changed according to linux implementation initialization
+  m_count = 0; //changed according to linux implementation initialization
   m_countBytes = 0;
   m_old = 0;
   m_idle = 1;

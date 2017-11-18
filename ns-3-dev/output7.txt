@@ -1,0 +1,58 @@
+Waf: Entering directory `/home/debojyoti/Desktop/Implementation-of-RED-in-ns-3-in-line-with-Linux-Kernel/ns-3-dev/build'
+Waf: Leaving directory `/home/debojyoti/Desktop/Implementation-of-RED-in-ns-3-in-line-with-Linux-Kernel/ns-3-dev/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (6.563s)
+Time	Unforced	Forced
+0	0	0
+Time	Unforced	Forced
+0.5	0	0
+Time	Unforced	Forced
+1	0	0
+Time	Unforced	Forced
+1.5	0	0
+Time	Unforced	Forced
+2	4	0
+Time	Unforced	Forced
+2.5	81	300
+Time	Unforced	Forced
+3	81	300
+Time	Unforced	Forced
+3.5	81	300
+Time	Unforced	Forced
+4	81	300
+Time	Unforced	Forced
+4.5	81	300
+Time	Unforced	Forced
+5	81	300
+Time	Unforced	Forced
+5.5	81	300
+Time	Unforced	Forced
+6	81	300
+Time	Unforced	Forced
+6.5	81	300
+Time	Unforced	Forced
+7	81	300
+Time	Unforced	Forced
+7.5	81	300
+Time	Unforced	Forced
+8	81	300
+Time	Unforced	Forced
+8.5	81	300
+Time	Unforced	Forced
+9	81	300
+Time	Unforced	Forced
+9.5	81	300
+*** ARED stats from Node 2 queue ***
+
+Packets/Bytes received: 5038 / 4724796
+Packets/Bytes enqueued: 4657 / 4472508
+Packets/Bytes dequeued: 4657 / 4472508
+Packets/Bytes requeued: 0 / 0
+Packets/Bytes dropped: 381 / 252288
+Packets/Bytes dropped before enqueue: 381 / 252288
+  Forced drop: 300 / 192164
+  Unforced drop: 81 / 60124
+Packets/Bytes dropped after dequeue: 0 / 0
+Packets/Bytes sent: 4657 / 4472508
+Packets/Bytes marked: 0 / 0
+
