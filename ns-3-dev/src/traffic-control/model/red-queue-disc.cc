@@ -646,6 +646,41 @@ void
 RedQueueDisc::UpdateMaxP ()
 {
   NS_LOG_FUNCTION (this << m_qAvg);
+  uint32_t nQueued = 0;
+
+  if (GetMode () == QUEUE_DISC_MODE_BYTES)
+    {
+      nQueued = GetInternalQueue (0)->GetNBytes ();
+    }
+  else if (GetMode () == QUEUE_DISC_MODE_PACKETS)
+    {
+      nQueued = GetInternalQueue (0)->GetNPackets ();
+    }
+
+  // simulate number of packets arrival during idle period
+  uint32_t m = 0;
+
+  if (m_idle == 1)
+    {
+      Time now = Simulator::Now ();
+
+      if (m_cautious == 3)
+        {
+          double ptc = m_ptc * m_meanPktSize / m_idlePktSize;
+          m = uint32_t (ptc * (now - m_idleTime).GetSeconds ());
+        }
+      else
+        {
+          m = uint32_t (m_ptc * (now - m_idleTime).GetSeconds ());
+        }
+      m_qAvg = m_qAvg * pow(1.0-m_qW, m);
+      m_qAvg += m_qW * nQueued;
+      m_idleTime += Seconds(m / m_ptc);
+
+    }
+  
+  
+   
 
   Time now = Simulator::Now ();
   double m_part = 0.4 * (m_maxTh - m_minTh);
